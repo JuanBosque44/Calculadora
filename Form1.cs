@@ -267,6 +267,19 @@ namespace Calculadora
         {
             try
             {
+                int contador = 0;
+                for (int i = 0; i < operaciones.Count; i++)
+                {
+                    if (operaciones[i] is float)
+                    {
+                        contador++;
+                    }
+                }
+                if (contador == operaciones.Count - 1) 
+                {
+                    Escribir(); 
+                    return false;
+                }
                 for (int i = 0; i < operaciones.Count; i++)
                 {
                     if (operaciones[i] is char && operaciones[i + 1] is char && (float)operaciones[i + 1] < operaciones.Count)
