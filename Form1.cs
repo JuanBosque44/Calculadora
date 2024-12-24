@@ -32,11 +32,8 @@ namespace Calculadora
         void ResolverOperaciones()
         {
             ArrayList operacionTemporal = new ArrayList(operaciones);
-
-            List<float> numeroConcatenado = new List<float>();
             float numeroConcat = 0;
-
-            for (int i = 0; i < operacionTemporal.Count; i++) //concatena y guarda los numeros, adaptar esto a los numeros decimales
+            for (int i = 0; i < operacionTemporal.Count; i++) //concatena y guarda los numeros
             {
                 if (operacionTemporal[0] is float && operacionTemporal.Count == 1)
                 {
@@ -50,22 +47,32 @@ namespace Calculadora
                     }
                     if (operacionTemporal[i] is char && (char)operacionTemporal[i] != ',' || i == operacionTemporal.Count - 1)
                     {
+                        //todos los numeros concatenados se guardan en el ultimo numero sin concatenar, antes de una operacion o del cierre del array
                         if (operacionTemporal[i - 1] is char) operacionTemporal[i] = numeroConcat;
-                        if (operacionTemporal[i - 1] is float) operacionTemporal[i - 1] = numeroConcat;
+                        if (operacionTemporal[i] is float && i == operacionTemporal.Count - 1) operacionTemporal[i] = numeroConcat;
+                        else if (operacionTemporal[i - 1] is float) operacionTemporal[i - 1] = numeroConcat;
                         if (numeroConcat.ToString().Length > 1)
                         {
                             if (i >= 2)
                             {
-                                for (int j = i - numeroConcat.ToString().Length; j < i - 1; j++)
+                                int carac = numeroConcat.ToString().Length;
+                                int contador = 0;
+                                do 
                                 {
-                                    if (operacionTemporal[j] is float && (float)operacionTemporal[j] != numeroConcat || (operacionTemporal[j] is char && (char)operacionTemporal[j] == ',')) operacionTemporal.RemoveAt(j);
-                                    if (operacionTemporal[j] is char && (char)operacionTemporal[j] == ',')
+                                    if (i != operacionTemporal.Count && operacionTemporal[i-carac] is float && (float)operacionTemporal[i-carac] != numeroConcat || (operacionTemporal[i-carac] is char && (char)operacionTemporal[i-carac] == ','))
                                     {
-                                        operacionTemporal.RemoveAt(j);
-                                        i--;
+                                        operacionTemporal.RemoveAt(i - carac);
+                                        contador++;
                                     }
-                                    if (i != operacionTemporal.Count - 1) i--;
+                                    else
+                                    {
+                                        operacionTemporal.RemoveAt(i - (carac-1));
+                                        contador++;
+                                    }
+                                    if (i == operacionTemporal.Count - 1 && i != carac) i--;
                                 }
+                                while (contador < carac-1);
+                                i -= contador;
                             }
                         }
                         numeroConcat = 0;
@@ -121,16 +128,8 @@ namespace Calculadora
                 }
             }
 
-            for (int i = 0; i < operacionTemporal.Count; i++)
-            {
-                if (operacionTemporal[i] is char coma && coma == ',' && operacionTemporal[0] is char && (char)operacionTemporal[0] != ',')
-                {
-                    float numeroDecimal = float.Parse(operacionTemporal[i - 1].ToString() + operacionTemporal[i].ToString());
-                    operacionTemporal[i] = numeroDecimal;
-                }
-            }
 
-            // Prioridad: multiplicación, división y módulo
+            // multiplicación, división y módulo
             for (int i = 0; i < operacionTemporal.Count; i++)
             {
                 if (operacionTemporal[i] is char)
@@ -151,10 +150,10 @@ namespace Calculadora
                             else if (operador == '%')
                                 resultado = operando1 % operando2;
 
-                            operacionTemporal[i - 1] = resultado; // Reemplaza el primer operando con el resultado
-                            operacionTemporal.RemoveAt(i);       // Elimina el operador
-                            operacionTemporal.RemoveAt(i);       // Elimina el segundo operando
-                            i--; // Retrocede el índice para reevaluar
+                            operacionTemporal[i - 1] = resultado; 
+                            operacionTemporal.RemoveAt(i);      
+                            operacionTemporal.RemoveAt(i);      
+                            i--; 
                         }
                     }
                     else
@@ -275,9 +274,9 @@ namespace Calculadora
                         contador++;
                     }
                 }
-                if (contador == operaciones.Count - 1) 
+                if (contador == operaciones.Count)
                 {
-                    Escribir(); 
+                    Escribir();
                     return false;
                 }
                 for (int i = 0; i < operaciones.Count; i++)
@@ -402,7 +401,7 @@ namespace Calculadora
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual)
             {
-                return; 
+                return;
             }
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button13.Text));
@@ -414,7 +413,7 @@ namespace Calculadora
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual)
             {
-                return; 
+                return;
             }
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button9.Text));
@@ -426,7 +425,7 @@ namespace Calculadora
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual)
             {
-                return; 
+                return;
             }
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button14.Text));
@@ -463,12 +462,12 @@ namespace Calculadora
             }
         }
 
-        private void btnCalcular_Click(object sender, EventArgs e) 
+        private void btnCalcular_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual)
             {
-                return; 
+                return;
             }
             ultimoBotonPresionado = botonActual;
             if (!UnSoloCalculo())
@@ -499,7 +498,7 @@ namespace Calculadora
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual)
             {
-                return; 
+                return;
             }
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button16.Text));
