@@ -57,21 +57,21 @@ namespace Calculadora
                             {
                                 int carac = numeroConcat.ToString().Length;
                                 int contador = 0;
-                                do 
+                                do
                                 {
-                                    if (i != operacionTemporal.Count && operacionTemporal[i-carac] is float && (float)operacionTemporal[i-carac] != numeroConcat || (operacionTemporal[i-carac] is char && (char)operacionTemporal[i-carac] == ','))
+                                    if (i != operacionTemporal.Count && operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != numeroConcat || (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','))
                                     {
                                         operacionTemporal.RemoveAt(i - carac);
                                         contador++;
                                     }
                                     else
                                     {
-                                        operacionTemporal.RemoveAt(i - (carac-1));
+                                        operacionTemporal.RemoveAt(i - (carac - 1));
                                         contador++;
                                     }
                                     if (i == operacionTemporal.Count - 1 && i != carac) i--;
                                 }
-                                while (contador < carac-1);
+                                while (contador < carac - 1);
                                 i -= contador;
                             }
                         }
@@ -89,7 +89,7 @@ namespace Calculadora
                         if (i != operacionTemporal.Count - 2 && i != operacionTemporal.Count - 1) i++;
                     }
                 }
-                else
+                else 
                 {
                     operacionTemporal[0] = ans;
                     if (i == 0) i = CantOp;
@@ -97,20 +97,31 @@ namespace Calculadora
                     {
                         numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString());
                     }
-                    if (operacionTemporal[i] is char && (char)operacionTemporal[i] != ',' || i == operacionTemporal.Count - 1)
+                    if (operacionTemporal[i] is char && (char)operacionTemporal[i] != ',' && i > 1 || i == operacionTemporal.Count - 1)
                     {
                         if (operacionTemporal[i - 1] is char && i != 0) operacionTemporal[i] = numeroConcat;
-                        if (operacionTemporal[i - 1] is float && i - 1 != 0) operacionTemporal[i - 1] = numeroConcat;
-                        if (i >= 2 && (float)operacionTemporal[0] != ans)
+                        if (operacionTemporal[i] is float && i == operacionTemporal.Count - 1 && i != 0) operacionTemporal[i] = numeroConcat;
+                        else if (operacionTemporal[i - 1] is float && i != 0) operacionTemporal[i - 1] = numeroConcat;
+                        if (i >= 2 && numeroConcat.ToString().Length > 1)
                         {
-                            for (int j = i - numeroConcat.ToString().Length; j < i - 1; j++)
+                            int carac = numeroConcat.ToString().Length;
+                            int contador = 0;
+                            do
                             {
-                                if (operacionTemporal[j] is float)
+                                if (i != operacionTemporal.Count && operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != numeroConcat || (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','))
                                 {
-                                    operacionTemporal.RemoveAt(j);
-                                    if (i != operacionTemporal.Count - 1) i--;
+                                    operacionTemporal.RemoveAt(i - carac);
+                                    contador++;
                                 }
+                                else
+                                {
+                                    operacionTemporal.RemoveAt(i - (carac - 1));
+                                    contador++;
+                                }
+                                if (i == operacionTemporal.Count - 1 && i != carac) i--;
                             }
+                            while (contador < carac - 1);
+                            i -= contador;
                         }
                         numeroConcat = 0;
                     }
@@ -127,8 +138,6 @@ namespace Calculadora
                     }
                 }
             }
-
-
             // multiplicación, división y módulo
             for (int i = 0; i < operacionTemporal.Count; i++)
             {
@@ -150,10 +159,10 @@ namespace Calculadora
                             else if (operador == '%')
                                 resultado = operando1 % operando2;
 
-                            operacionTemporal[i - 1] = resultado; 
-                            operacionTemporal.RemoveAt(i);      
-                            operacionTemporal.RemoveAt(i);      
-                            i--; 
+                            operacionTemporal[i - 1] = resultado;
+                            operacionTemporal.RemoveAt(i);
+                            operacionTemporal.RemoveAt(i);
+                            i--;
                         }
                     }
                     else
@@ -172,7 +181,8 @@ namespace Calculadora
                             else if (operador == '%')
                                 resultado = operando1 % operando2;
 
-                            operacionTemporal[i - 1] = resultado;
+                            ans = resultado;
+                            operacionTemporal[i - 1] = ans;
                             operacionTemporal.RemoveAt(i);
                             operacionTemporal.RemoveAt(i);
                             i--;
@@ -181,7 +191,7 @@ namespace Calculadora
                 }
             }
 
-            // Resolviendo suma y resta
+            //suma y resta
             for (int i = 0; i < operacionTemporal.Count; i++)
             {
                 if (operacionTemporal[i] is char)
@@ -220,7 +230,8 @@ namespace Calculadora
                             else if (operador == '-')
                                 resultado = operando1 - operando2;
 
-                            operacionTemporal[i - 1] = resultado; // Reemplaza el primer operando con el resultado
+                            ans = resultado;
+                            operacionTemporal[i - 1] = ans; // Reemplaza el primer operando con el resultado
                             operacionTemporal.RemoveAt(i);       // Elimina el operador
                             operacionTemporal.RemoveAt(i);       // Elimina el segundo operando
                             i--; // Retrocede el índice para reevaluar
@@ -387,10 +398,7 @@ namespace Calculadora
         private void button11_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual)
-            {
-                return; // Mismo botón presionado, no hace nada
-            }
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button11.Text));
             Escribir();
@@ -399,10 +407,7 @@ namespace Calculadora
         private void button13_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual)
-            {
-                return;
-            }
+            if (ultimoBotonPresionado == botonActual) return;   
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button13.Text));
             Escribir();
@@ -411,10 +416,7 @@ namespace Calculadora
         private void button9_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual)
-            {
-                return;
-            }
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button9.Text));
             Escribir();
@@ -423,10 +425,7 @@ namespace Calculadora
         private void button14_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual)
-            {
-                return;
-            }
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button14.Text));
             Escribir();
@@ -465,15 +464,9 @@ namespace Calculadora
         private void btnCalcular_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual)
-            {
-                return;
-            }
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
-            if (!UnSoloCalculo())
-            {
-                return;
-            }
+            if (!UnSoloCalculo()) return;
             ResolverOperaciones();
         }
 
@@ -483,7 +476,6 @@ namespace Calculadora
             if (File.Exists("Tema.txt")) Tema.CambiarColor(opciones);
             opciones.ShowDialog();
             Tema.CambiarColor(this);
-
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -496,10 +488,7 @@ namespace Calculadora
         private void button16_Click(object sender, EventArgs e) //coma
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual)
-            {
-                return;
-            }
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button16.Text));
             Escribir();
@@ -514,13 +503,13 @@ namespace Calculadora
     }
 }
 
-
-
 /* falta terminar opciones 
  * --> agregar opcion de cambiar tema (b y n) ---
  * --> agregar opcion cambiar tipo de calculadora (conversor de numeros, temperaturas, romanos, etc)
  * historial de calculos
  * ver una forma mas optima de cambiar la funcion de cada boton
+ * configurar botones con teclas fisicas
+ * agregar numeros negativos
  * agregar otros tipos de calculo
  */
 
