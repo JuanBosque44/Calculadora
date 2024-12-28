@@ -257,7 +257,7 @@
             // Menu_Opciones
             // 
             this.Menu_Opciones.Name = "Menu_Opciones";
-            this.Menu_Opciones.Size = new System.Drawing.Size(180, 22);
+            this.Menu_Opciones.Size = new System.Drawing.Size(124, 22);
             this.Menu_Opciones.Text = "Opciones";
             this.Menu_Opciones.Click += new System.EventHandler(this.Menu_Opciones_Click);
             // 
@@ -345,6 +345,7 @@
             this.Controls.Add(this.Resultados);
             this.Name = "Form1";
             this.Text = "Calculadora";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);

@@ -24,6 +24,7 @@ namespace Calculadora
         {
             InitializeComponent();
             if (File.Exists("Tema.txt")) Tema.CambiarColor(this);
+            this.KeyPreview = true;
         }
         private Button ultimoBotonPresionado = null;
         /// <summary>
@@ -89,7 +90,7 @@ namespace Calculadora
                         if (i != operacionTemporal.Count - 2 && i != operacionTemporal.Count - 1) i++;
                     }
                 }
-                else 
+                else
                 {
                     operacionTemporal[0] = ans;
                     if (i == 0) i = CantOp;
@@ -280,10 +281,7 @@ namespace Calculadora
                 int contador = 0;
                 for (int i = 0; i < operaciones.Count; i++)
                 {
-                    if (operaciones[i] is float)
-                    {
-                        contador++;
-                    }
+                    if (operaciones[i] is float) contador++;
                 }
                 if (contador == operaciones.Count)
                 {
@@ -407,7 +405,7 @@ namespace Calculadora
         private void button13_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;   
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button13.Text));
             Escribir();
@@ -500,6 +498,88 @@ namespace Calculadora
             operaciones.Add(ans);
             Escribir();
         }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.D1:
+                    button1.PerformClick();
+                    break;
+
+                case Keys.D2:
+                    button10.PerformClick();
+                    break;
+
+                case Keys.D3:
+                    button2.PerformClick();
+                    break;
+
+                case Keys.D4:
+                    button3.PerformClick();
+                    break;
+
+                case Keys.D5:
+                    button4.PerformClick();
+                    break;
+
+                case Keys.D6:
+                    button5.PerformClick();
+                    break;
+
+                case Keys.D7:
+                    button6.PerformClick();
+                    break;
+
+                case Keys.D8:
+                    button7.PerformClick();
+                    break;
+
+                case Keys.D9:
+                    button8.PerformClick();
+                    break;
+
+                case Keys.D0:
+                    button15.PerformClick();
+                    break;
+
+                case Keys.Oemcomma:
+                    button16.PerformClick();
+                    break;
+
+                case Keys.Oemplus:
+                    button11.PerformClick();
+                    break;
+
+                case Keys.OemMinus:
+                    button9.PerformClick();
+                    break;
+
+                case Keys.Back:
+                    btnBorrar.PerformClick();
+                    break;
+
+                case Keys.Divide:
+                    button13.PerformClick();
+                    break;
+
+                case Keys.Multiply:
+                    button12.PerformClick();
+                    break;
+
+                case Keys.Enter:
+                    btnCalcular.PerformClick();
+                    break;
+                case Keys.Add:
+                    button11.PerformClick();
+                    break;
+                case Keys.Subtract:
+                    button9.PerformClick();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 
@@ -518,49 +598,6 @@ namespace Calculadora
 //List<float> numeroConcatenado = new List<float>();
 //float numeroConcat = 0;
 
-//for (int i = 0; i < operaciones.Count; i++) //concatena y guarda los numeros
-//{
-//    if (PrimerCalculo)
-//    {
-//        if (operaciones[i] is float)
-//        {
-//            numeroConcat = float.Parse(numeroConcat.ToString() + operaciones[i].ToString());
-//            if (operaciones[i] is char)
-//            {
-//                numeroConcatenado.Add(numeroConcat);
-//                numeroConcat = 0;
-//            }
-//        }
-//        if (operaciones[i] is char && (char)operaciones[i] != ',' || i == operaciones.Count - 1)
-//        {
-//            numeroConcatenado.Add(numeroConcat);
-//            numeroConcat = 0;
-//        }
-//        else if (operaciones[i] is char && (char)operaciones[i] == ',' && operaciones[i + 1] is float)
-//        {
-//            numeroConcat = float.Parse(numeroConcat.ToString() + operaciones[i].ToString() + operaciones[i + 1].ToString());
-//            i++;
-//        }
-//    }
-//    else
-//    {
-//        if (i == 0) i = CantOp;
-//        if (operaciones[i] is float)
-//        {
-//            numeroConcat = float.Parse(numeroConcat.ToString() + operaciones[i].ToString());
-//        }
-//        if (operaciones[i] is char && (char)operaciones[i] != ',' || i == operaciones.Count - 1)
-//        {
-//            numeroConcatenado.Add(numeroConcat);
-//            numeroConcat = 0;
-//        }
-//        else if (operaciones[i] is char && (char)operaciones[i] == ',' && operaciones[i + 1] is float)
-//        {
-//            numeroConcat = float.Parse(numeroConcat.ToString() + operaciones[i].ToString() + operaciones[i + 1].ToString());
-//            i++;
-//        }
-//    }
-//}
 
 //for (int i = 0; i < operaciones.Count; i++)
 //{
