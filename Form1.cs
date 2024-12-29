@@ -52,40 +52,17 @@ namespace Calculadora
                         if (operacionTemporal[i - 1] is char) operacionTemporal[i] = numeroConcat;
                         if (operacionTemporal[i] is float && i == operacionTemporal.Count - 1) operacionTemporal[i] = numeroConcat;
                         else if (operacionTemporal[i - 1] is float) operacionTemporal[i - 1] = numeroConcat;
-                        if (numeroConcat.ToString().Length > 1)
-                        {
-                            if (i >= 2)
-                            {
-                                int carac = numeroConcat.ToString().Length;
-                                int contador = 0;
-                                do
-                                {
-                                    if (i != operacionTemporal.Count && operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != numeroConcat || (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','))
-                                    {
-                                        operacionTemporal.RemoveAt(i - carac);
-                                        contador++;
-                                    }
-                                    else
-                                    {
-                                        operacionTemporal.RemoveAt(i - (carac - 1));
-                                        contador++;
-                                    }
-                                    if (i == operacionTemporal.Count - 1 && i != carac) i--;
-                                }
-                                while (contador < carac - 1);
-                                i -= contador;
-                            }
-                        }
+                        Eliminar();
                         numeroConcat = 0;
                     }
-                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float)
+                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float) // actualizar los concatenados de decimales para que colocque los nros adelante
                     {
                         numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString() + operacionTemporal[i + 1].ToString());
                         if (i == operacionTemporal.Count - 2)
                         {
-                            if (operacionTemporal[i - 1] is char && i == operacionTemporal.Count - 2) operacionTemporal[i] = numeroConcat;
-                            if (operacionTemporal[i - 1] is float && i == operacionTemporal.Count - 2) operacionTemporal[i - 1] = numeroConcat;
+                            operacionTemporal[operacionTemporal.Count - 1] = numeroConcat;
                             i++;
+                            Eliminar();
                         }
                         if (i != operacionTemporal.Count - 2 && i != operacionTemporal.Count - 1) i++;
                     }
@@ -103,27 +80,7 @@ namespace Calculadora
                         if (operacionTemporal[i - 1] is char && i != 0) operacionTemporal[i] = numeroConcat;
                         if (operacionTemporal[i] is float && i == operacionTemporal.Count - 1 && i != 0) operacionTemporal[i] = numeroConcat;
                         else if (operacionTemporal[i - 1] is float && i != 0) operacionTemporal[i - 1] = numeroConcat;
-                        if (i >= 2 && numeroConcat.ToString().Length > 1)
-                        {
-                            int carac = numeroConcat.ToString().Length;
-                            int contador = 0;
-                            do
-                            {
-                                if (i != operacionTemporal.Count && operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != numeroConcat || (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','))
-                                {
-                                    operacionTemporal.RemoveAt(i - carac);
-                                    contador++;
-                                }
-                                else
-                                {
-                                    operacionTemporal.RemoveAt(i - (carac - 1));
-                                    contador++;
-                                }
-                                if (i == operacionTemporal.Count - 1 && i != carac) i--;
-                            }
-                            while (contador < carac - 1);
-                            i -= contador;
-                        }
+                        Eliminar();
                         numeroConcat = 0;
                     }
                     else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float)
@@ -131,11 +88,35 @@ namespace Calculadora
                         numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString() + operacionTemporal[i + 1].ToString());
                         if (i == operacionTemporal.Count - 2)
                         {
-                            if (operacionTemporal[i - 1] is char && i == operacionTemporal.Count - 2) operacionTemporal[i] = numeroConcat;
-                            if (operacionTemporal[i - 1] is float && i == operacionTemporal.Count - 2) operacionTemporal[i - 1] = numeroConcat;
+                            operacionTemporal[operacionTemporal.Count - 1] = numeroConcat;
                             i++;
+                            Eliminar();
                         }
                         if (i != operacionTemporal.Count - 2 && i != operacionTemporal.Count - 1) i++;
+                    }
+                }
+                void Eliminar()
+                {
+                    if (i >= 2 && numeroConcat.ToString().Length > 1 && numeroConcat != ans)
+                    {
+                        int carac = numeroConcat.ToString().Length;
+                        int contador = 0;
+                        do
+                        {
+                            if (i != operacionTemporal.Count && operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != numeroConcat || (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','))
+                            {
+                                operacionTemporal.RemoveAt(i - carac);
+                                contador++;
+                            }
+                            else
+                            {
+                                operacionTemporal.RemoveAt(i - (carac - 1));
+                                contador++;
+                            }
+                            if (i == operacionTemporal.Count - 1 && i != carac) i--;
+                        }
+                        while (contador < carac - 1);
+                        i -= contador;
                     }
                 }
             }
@@ -584,11 +565,9 @@ namespace Calculadora
 }
 
 /* falta terminar opciones 
- * --> agregar opcion de cambiar tema (b y n) ---
  * --> agregar opcion cambiar tipo de calculadora (conversor de numeros, temperaturas, romanos, etc)
  * historial de calculos
  * ver una forma mas optima de cambiar la funcion de cada boton
- * configurar botones con teclas fisicas
  * agregar numeros negativos
  * agregar otros tipos de calculo
  */
