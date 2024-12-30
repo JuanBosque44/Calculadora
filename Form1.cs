@@ -19,7 +19,7 @@ namespace Calculadora
         float ans;
         int CantOp = 0;
         bool PrimerCalculo = true;
-        char[] simbolos = { '+', '-', 'X', '/', '%' };
+        readonly char[] simbolos = { '+', '-', 'X', '/', '%' };
         public Form1()
         {
             InitializeComponent();
@@ -34,13 +34,11 @@ namespace Calculadora
         {
             ArrayList operacionTemporal = new ArrayList(operaciones);
             float numeroConcat = 0;
+            if (operacionTemporal[0] is float && operacionTemporal.Count == 1) Escribir();
             for (int i = 0; i < operacionTemporal.Count; i++) //concatena y guarda los numeros
             {
-                if (operacionTemporal[0] is float && operacionTemporal.Count == 1)
-                {
-                    Escribir();
-                }
-                else if (PrimerCalculo)
+
+                if (PrimerCalculo)
                 {
                     if (operacionTemporal[i] is float)
                     {
@@ -70,7 +68,8 @@ namespace Calculadora
                 else
                 {
                     operacionTemporal[0] = ans;
-                    if (i == 0) i = CantOp;
+                    if (i == 0 && CantOp > 0) i = CantOp;
+                    else if (i == 0) i = 1;
                     if (operacionTemporal[i] is float)
                     {
                         numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString());
@@ -247,7 +246,7 @@ namespace Calculadora
             }
             else
             {
-                Resultados.Text += ans;
+                if (ultimoBotonPresionado != btnBorrar) Resultados.Text += ans;
                 for (int i = 0; i < operaciones.Count; i++)
                 {
                     if (i == 0) i = CantOp;
@@ -435,7 +434,12 @@ namespace Calculadora
             if (operaciones.Count > 0)
             {
                 if (!PrimerCalculo && CantOp != 0) CantOp--;
-                operaciones.RemoveAt(operaciones.Count - 1);
+                if (operaciones[operaciones.Count - 1] is float && (float)operaciones[operaciones.Count - 1] == ans)
+                {
+                    PrimerCalculo = true;
+                    operaciones.RemoveAt(operaciones.Count - 1);
+                }
+                else operaciones.RemoveAt(operaciones.Count - 1);
                 Escribir();
             }
         }
@@ -475,6 +479,8 @@ namespace Calculadora
 
         private void button17_Click(object sender, EventArgs e) //answer
         {
+            Button botonActual = (Button)sender;
+            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = (Button)sender;
             operaciones.Add(ans);
             Escribir();
@@ -557,6 +563,36 @@ namespace Calculadora
                 case Keys.Subtract:
                     button9.PerformClick();
                     break;
+                case Keys.NumPad1:
+                    button1.PerformClick();
+                    break;
+                case Keys.NumPad2:
+                    button10.PerformClick();
+                    break;
+                case Keys.NumPad3:
+                    button2.PerformClick();
+                    break;
+                case Keys.NumPad4:
+                    button3.PerformClick();
+                    break;
+                case Keys.NumPad5:
+                    button4.PerformClick();
+                    break;
+                case Keys.NumPad6:
+                    button5.PerformClick();
+                    break;
+                case Keys.NumPad7:
+                    button6.PerformClick();
+                    break;
+                case Keys.NumPad8:
+                    button7.PerformClick(); 
+                    break;
+                case Keys.NumPad9:
+                    button8.PerformClick();
+                    break;
+                case Keys.NumPad0:
+                    button15.PerformClick();
+                    break;
                 default:
                     break;
             }
@@ -570,6 +606,7 @@ namespace Calculadora
  * ver una forma mas optima de cambiar la funcion de cada boton
  * agregar numeros negativos
  * agregar otros tipos de calculo
+ * Buscar alguna soluciom al problema de si el usuario decide calcular usando los mismos numeros que ans pero que no quiso pulsar el boton homonimo
  */
 
 

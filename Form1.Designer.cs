@@ -257,7 +257,7 @@
             // Menu_Opciones
             // 
             this.Menu_Opciones.Name = "Menu_Opciones";
-            this.Menu_Opciones.Size = new System.Drawing.Size(124, 22);
+            this.Menu_Opciones.Size = new System.Drawing.Size(180, 22);
             this.Menu_Opciones.Text = "Opciones";
             this.Menu_Opciones.Click += new System.EventHandler(this.Menu_Opciones_Click);
             // 
