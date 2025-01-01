@@ -96,9 +96,9 @@ namespace Calculadora
                 }
                 void Eliminar()
                 {
+                    int carac = numeroConcat.ToString().Length;
                     if (i >= 2 && numeroConcat.ToString().Length > 1 && numeroConcat != ans)
                     {
-                        int carac = numeroConcat.ToString().Length;
                         int contador = 0;
                         do
                         {
@@ -116,6 +116,24 @@ namespace Calculadora
                         }
                         while (contador < carac - 1);
                         i -= contador;
+                    }
+                    else if (i >= 2 && numeroConcat.ToString().Length > 1 && numeroConcat == ans) // eliminar los numeros que el usuario escribio en vez de seleccionar ans
+                    {
+                        int contador = 0;
+                        do
+                        {
+                            if (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ',' || operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != ans)
+                            {
+                                operacionTemporal.Remove(i - carac);
+                                contador++;
+                            }
+                            else if (operacionTemporal[i - (carac - 1)] is float && (float)operacionTemporal[i - (carac - 1)] != ans) 
+                            {
+                                operacionTemporal.RemoveAt(i - (carac - 1)); 
+                                contador++;
+                            }
+                        }
+                        while (contador < carac -1);
                     }
                 }
             }

@@ -115,7 +115,7 @@
             this.Controls.Add(this.radioButton1);
             this.Name = "Opciones";
             this.Text = "Configuracion";
-            this.TransparencyKey = System.Drawing.Color.White;
+            this.TransparencyKey = System.Drawing.Color.IndianRed;
             this.ResumeLayout(false);
             this.PerformLayout();
 
