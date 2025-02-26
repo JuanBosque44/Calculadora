@@ -53,7 +53,7 @@ namespace Calculadora
                         Eliminar();
                         numeroConcat = 0;
                     }
-                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float) // actualizar los concatenados de decimales para que colocque los nros adelante
+                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float) 
                     {
                         numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString() + operacionTemporal[i + 1].ToString());
                         if (i == operacionTemporal.Count - 2)
@@ -97,6 +97,7 @@ namespace Calculadora
                 void Eliminar()
                 {
                     int carac = numeroConcat.ToString().Length;
+                    if (!PrimerCalculo && operacionTemporal[i] is float && (float)operacionTemporal[i] == ans && operacionTemporal[i - 1] is char && (char)operacionTemporal[i - 1] != ',') return; // comprobar que realiza su funcion
                     if (i >= 2 && numeroConcat.ToString().Length > 1 && numeroConcat != ans)
                     {
                         int contador = 0;
@@ -122,7 +123,7 @@ namespace Calculadora
                         int contador = 0;
                         do
                         {
-                            if (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ',' || operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != ans)
+                            if (operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != ans || operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','  )
                             {
                                 operacionTemporal.Remove(i - carac);
                                 contador++;
@@ -264,7 +265,7 @@ namespace Calculadora
             }
             else
             {
-                if (ultimoBotonPresionado != btnBorrar) Resultados.Text += ans;
+                if (ultimoBotonPresionado != btnBorrar && CantOp != 0) Resultados.Text += ans;
                 for (int i = 0; i < operaciones.Count; i++)
                 {
                     if (i == 0) i = CantOp;
