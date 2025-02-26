@@ -13,14 +13,14 @@ using Calculadora;
 
 namespace Calculadora
 {
-    public partial class Form1 : Form
+    public partial class Calculadora : Form
     {
         ArrayList operaciones = new ArrayList();
         float ans;
         int CantOp = 0;
         bool PrimerCalculo = true;
         readonly char[] simbolos = { '+', '-', 'X', '/', '%' };
-        public Form1()
+        public Calculadora()
         {
             InitializeComponent();
             if (File.Exists("Tema.txt")) Tema.CambiarColor(this);
