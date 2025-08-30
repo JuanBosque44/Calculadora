@@ -18,28 +18,24 @@ namespace Calculadora
                 string tema = reader.ReadLine().Trim();
                 if (tema == "Claro")
                 {
-                    formulario.ForeColor = Color.Black;
-                    formulario.BackColor = Color.White;
-                    foreach (Control control in formulario.Controls)
-                    {
-                        if (control is Button)
-                        {
-                            control.BackColor = Color.White;
-                        }
-                    }
+                    CambiarColor(Color.White, Color.Black);
                 }
                 else if (tema == "Oscuro")
                 {
-                    formulario.ForeColor = Color.White;
-                    formulario.BackColor = Color.Black;
+                    CambiarColor(Color.Black, Color.White);
+                }
+
+                void CambiarColor(Color colorElegido, Color contraste) 
+                {
+                    formulario.ForeColor = contraste;
+                    formulario.BackColor = colorElegido;
                     foreach (Control control in formulario.Controls)
                     {
                         if (control is Button)
                         {
-                            control.BackColor = Color.Black;
+                            control.BackColor = colorElegido;
                         }
                     }
-
                 }
             }
         }

@@ -53,7 +53,7 @@ namespace Calculadora
                         Eliminar();
                         numeroConcat = 0;
                     }
-                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float) 
+                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float)
                     {
                         numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString() + operacionTemporal[i + 1].ToString());
                         if (i == operacionTemporal.Count - 2)
@@ -123,18 +123,18 @@ namespace Calculadora
                         int contador = 0;
                         do
                         {
-                            if (operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != ans || operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','  )
+                            if (operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != ans || operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ',')
                             {
                                 operacionTemporal.Remove(i - carac);
                                 contador++;
                             }
-                            else if (operacionTemporal[i - (carac - 1)] is float && (float)operacionTemporal[i - (carac - 1)] != ans) 
+                            else if (operacionTemporal[i - (carac - 1)] is float && (float)operacionTemporal[i - (carac - 1)] != ans)
                             {
-                                operacionTemporal.RemoveAt(i - (carac - 1)); 
+                                operacionTemporal.RemoveAt(i - (carac - 1));
                                 contador++;
                             }
                         }
-                        while (contador < carac -1);
+                        while (contador < carac - 1);
                     }
                 }
             }
@@ -145,48 +145,11 @@ namespace Calculadora
                 {
                     if (PrimerCalculo)
                     {
-                        char operador = (char)operacionTemporal[i];
-                        if (operador == 'X' || operador == '/' || operador == '%')
-                        {
-                            float operando1 = (float)operacionTemporal[i - 1];
-                            float operando2 = (float)operacionTemporal[i + 1];
-                            float resultado = 0;
-
-                            if (operador == 'X')
-                                resultado = operando1 * operando2;
-                            else if (operador == '/')
-                                resultado = operando1 / operando2;
-                            else if (operador == '%')
-                                resultado = operando1 % operando2;
-
-                            operacionTemporal[i - 1] = resultado;
-                            operacionTemporal.RemoveAt(i);
-                            operacionTemporal.RemoveAt(i);
-                            i--;
-                        }
+                        operacionTemporal = Operaciones.CalculosPrimerOrden(operacionTemporal, i, ans);
                     }
                     else
                     {
-                        char operador = (char)operacionTemporal[i];
-                        if (operador == 'X' || operador == '/' || operador == '%')
-                        {
-                            float operando1 = ans;
-                            float operando2 = (float)operacionTemporal[i + 1];
-                            float resultado = 0;
-
-                            if (operador == 'X')
-                                resultado = operando1 * operando2;
-                            else if (operador == '/')
-                                resultado = operando1 / operando2;
-                            else if (operador == '%')
-                                resultado = operando1 % operando2;
-
-                            ans = resultado;
-                            operacionTemporal[i - 1] = ans;
-                            operacionTemporal.RemoveAt(i);
-                            operacionTemporal.RemoveAt(i);
-                            i--;
-                        }
+                        operacionTemporal = Operaciones.CalculosPrimerOrden(operacionTemporal, i, ans);
                     }
                 }
             }
@@ -198,44 +161,11 @@ namespace Calculadora
                 {
                     if (PrimerCalculo)
                     {
-                        char operador = (char)operacionTemporal[i];
-                        if (operador == '+' || operador == '-')
-                        {
-                            float operando1 = (float)operacionTemporal[i - 1];
-                            float operando2 = (float)operacionTemporal[i + 1];
-                            float resultado = 0;
-
-                            if (operador == '+')
-                                resultado = operando1 + operando2;
-                            else if (operador == '-')
-                                resultado = operando1 - operando2;
-
-                            operacionTemporal[i - 1] = resultado;
-                            operacionTemporal.RemoveAt(i);
-                            operacionTemporal.RemoveAt(i);
-                            i--;
-                        }
+                        operacionTemporal = Operaciones.CalculosSegundoOrden(operacionTemporal, i, ans);
                     }
                     else
                     {
-                        char operador = (char)operacionTemporal[i];
-                        if (operador == '+' || operador == '-')
-                        {
-                            float operando1 = ans;
-                            float operando2 = (float)operacionTemporal[i + 1];
-                            float resultado = 0;
-
-                            if (operador == '+')
-                                resultado = operando1 + operando2;
-                            else if (operador == '-')
-                                resultado = operando1 - operando2;
-
-                            ans = resultado;
-                            operacionTemporal[i - 1] = ans; // Reemplaza el primer operando con el resultado
-                            operacionTemporal.RemoveAt(i);       // Elimina el operador
-                            operacionTemporal.RemoveAt(i);       // Elimina el segundo operando
-                            i--; // Retrocede el índice para reevaluar
-                        }
+                        operacionTemporal = Operaciones.CalculosSegundoOrden(operacionTemporal, i, ans);
                     }
                 }
             }
@@ -604,7 +534,7 @@ namespace Calculadora
                     button6.PerformClick();
                     break;
                 case Keys.NumPad8:
-                    button7.PerformClick(); 
+                    button7.PerformClick();
                     break;
                 case Keys.NumPad9:
                     button8.PerformClick();
@@ -625,75 +555,6 @@ namespace Calculadora
  * ver una forma mas optima de cambiar la funcion de cada boton
  * agregar numeros negativos
  * agregar otros tipos de calculo
- * Buscar alguna soluciom al problema de si el usuario decide calcular usando los mismos numeros que ans pero que no quiso pulsar el boton homonimo
  */
 
 
-//Codigo anterior de la calculadora
-//List<float> numeroConcatenado = new List<float>();
-//float numeroConcat = 0;
-
-
-//for (int i = 0; i < operaciones.Count; i++)
-//{
-//    if (operaciones[i] is char && (char)operaciones[i] != ',')
-//    {
-//        if (PrimerCalculo)
-//        {
-//            if ((char)operaciones[i] == '+')
-//            {
-//                ans = Operaciones.Suma(numeroConcatenado);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == '-')
-//            {
-//                ans = Operaciones.Resta(numeroConcatenado);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == 'X')
-//            {
-//                ans = Operaciones.Multiplicacion(numeroConcatenado);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == '/')
-//            {
-//                ans = Operaciones.Division(numeroConcatenado);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == '%') Escribir(Operaciones.Resto(numeroConcatenado));
-//            PrimerCalculo = false;
-//        }
-//        else
-//        {
-//            if (i == 1) i = CantOp;
-//            if (operaciones[i] is float) return;
-//            if ((char)operaciones[i] == '+')
-//            {
-//                ans = Operaciones.Suma(ans, numeroConcatenado);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == '-')
-//            {
-//                ans = Operaciones.Resta(numeroConcatenado, ans);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == 'X')
-//            {
-//                ans = Operaciones.Multiplicacion(numeroConcatenado, ans);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == '/')
-//            {
-//                ans = Operaciones.Division(numeroConcatenado, ans);
-//                Escribir(ans);
-//            }
-//            else if ((char)operaciones[i] == '%')
-//            {
-//                ans = Operaciones.Resto(numeroConcatenado, ans);
-//                Escribir(ans);
-//            }
-//        }
-//    }
-
-//}
-//CantOp = operaciones.Count;
