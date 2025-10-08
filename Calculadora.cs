@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections;
 using System.IO;
-using Calculadora;
 
 namespace Calculadora
 {
@@ -19,7 +11,6 @@ namespace Calculadora
         float ans;
         int CantOp = 0;
         bool PrimerCalculo = true;
-        readonly char[] simbolos = { '+', '-', 'X', '/', '%' };
         public Calculadora()
         {
             InitializeComponent();
@@ -143,14 +134,7 @@ namespace Calculadora
             {
                 if (operacionTemporal[i] is char)
                 {
-                    if (PrimerCalculo)
-                    {
-                        operacionTemporal = Operaciones.CalculosPrimerOrden(operacionTemporal, i, ans);
-                    }
-                    else
-                    {
-                        operacionTemporal = Operaciones.CalculosPrimerOrden(operacionTemporal, i, ans);
-                    }
+                    operacionTemporal = Operaciones.CalculosPrimerOrden(operacionTemporal, i, ans);
                 }
             }
 
@@ -159,18 +143,10 @@ namespace Calculadora
             {
                 if (operacionTemporal[i] is char)
                 {
-                    if (PrimerCalculo)
-                    {
-                        operacionTemporal = Operaciones.CalculosSegundoOrden(operacionTemporal, i, ans);
-                    }
-                    else
-                    {
-                        operacionTemporal = Operaciones.CalculosSegundoOrden(operacionTemporal, i, ans);
-                    }
+                    operacionTemporal = Operaciones.CalculosSegundoOrden(operacionTemporal, i, ans);
                 }
             }
 
-            // Al final de la evaluación, el resultado estará en el primer elemento
             if (operacionTemporal[0] is float)
             {
                 ans = (float)operacionTemporal[0];
@@ -201,56 +177,6 @@ namespace Calculadora
                     if (i == 0) i = CantOp;
                     Resultados.Text += operaciones[i].ToString();
                 }
-            }
-        }
-        bool UnSoloCalculo()
-        {
-            try
-            {
-                int contador = 0;
-                for (int i = 0; i < operaciones.Count; i++)
-                {
-                    if (operaciones[i] is float) contador++;
-                }
-                if (contador == operaciones.Count)
-                {
-                    Escribir();
-                    return false;
-                }
-                for (int i = 0; i < operaciones.Count; i++)
-                {
-                    if (operaciones[i] is char && operaciones[i + 1] is char && (float)operaciones[i + 1] < operaciones.Count)
-                    {
-                        if (operaciones[i] == operaciones[i + 1])
-                        {
-                            return false;
-                        }
-                        for (int j = 0; j < simbolos.Length; j++)
-                        {
-                            if (j < simbolos.Length - 1)
-                                if ((char)operaciones[i] == simbolos[j] && (char)operaciones[i + 1] == simbolos[j] || (char)operaciones[i] == simbolos[j + 1] && (char)operaciones[i + 1] == simbolos[j + 1])
-                                {
-                                    return false;
-                                }
-                            if (j == simbolos.Length - 1)
-                                if ((char)operaciones[i] == simbolos[j] && (char)operaciones[i] == simbolos[0])
-                                {
-                                    return false;
-                                }
-                        }
-                        if ((char)operaciones[0] == ',')
-                        {
-                            return false;
-                        }
-                        return true;
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                return false;
             }
         }
         void Escribir(float resultado)
@@ -325,7 +251,7 @@ namespace Calculadora
         private void button11_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
+            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button11.Text));
             Escribir();
@@ -334,7 +260,7 @@ namespace Calculadora
         private void button13_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
+            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button13.Text));
             Escribir();
@@ -352,7 +278,7 @@ namespace Calculadora
         private void button14_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
+            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button14.Text));
             Escribir();
@@ -361,7 +287,7 @@ namespace Calculadora
         private void button12_Click(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
+            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button12.Text));
             Escribir();
@@ -369,7 +295,8 @@ namespace Calculadora
 
         private void btnBorrarTodo_Click(object sender, EventArgs e)
         {
-            ultimoBotonPresionado = (Button)sender;
+            //ultimoBotonPresionado = (Button)sender;
+            ultimoBotonPresionado = null;
             operaciones.Clear();
             ans = 0;
             CantOp = 0;
@@ -398,7 +325,11 @@ namespace Calculadora
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
-            if (!UnSoloCalculo()) return;
+            if (!Validacion.UnSoloCalculo(operaciones)) 
+            {
+                Escribir();
+                return;
+            }
             ResolverOperaciones();
         }
 
@@ -420,7 +351,7 @@ namespace Calculadora
         private void button16_Click(object sender, EventArgs e) //coma
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
+            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
             operaciones.Add(char.Parse(button16.Text));
             Escribir();
@@ -429,7 +360,7 @@ namespace Calculadora
         private void button17_Click(object sender, EventArgs e) //answer
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
+            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = (Button)sender;
             operaciones.Add(ans);
             Escribir();
