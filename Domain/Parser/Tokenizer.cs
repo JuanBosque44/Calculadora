@@ -22,12 +22,12 @@ namespace Calculadora.Domain.Parser
                     continue;
                 }
 
-                if (char.IsDigit(c) || c == '.')
+                if (char.IsDigit(c) || c == ',')
                 {
                     string number = "";
 
                     while (i < input.Length &&
-                          (char.IsDigit(input[i]) || input[i] == '.'))
+                          (char.IsDigit(input[i]) || input[i] == ','))
                     {
                         number += input[i];
                         i++;
