@@ -2,11 +2,14 @@
 using System.Windows.Forms;
 using System.Collections;
 using System.IO;
+using Calculadora.Aplication.Services;
+using Calculadora.Domain.Engine;
 
 namespace Calculadora
 {
     public partial class Calculadora : Form
     {
+        private readonly CalculatorService _calculator;
         ArrayList operaciones = new ArrayList();
         float ans;
         int CantOp = 0;
@@ -14,148 +17,12 @@ namespace Calculadora
         public Calculadora()
         {
             InitializeComponent();
+            _calculator = new CalculatorService(new CalculatorEngine());
             if (File.Exists("Tema.txt")) Tema.CambiarColor(this);
             this.KeyPreview = true;
         }
         private Button ultimoBotonPresionado = null;
-        /// <summary>
-        /// Resuelve operaciones matematicas
-        /// </summary>
-        void ResolverOperaciones()
-        {
-            ArrayList operacionTemporal = new ArrayList(operaciones);
-            float numeroConcat = 0;
-            if (operacionTemporal[0] is float && operacionTemporal.Count == 1) Escribir();
-            for (int i = 0; i < operacionTemporal.Count; i++) //concatena y guarda los numeros
-            {
-
-                if (PrimerCalculo)
-                {
-                    if (operacionTemporal[i] is float)
-                    {
-                        numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString());
-                    }
-                    if (operacionTemporal[i] is char && (char)operacionTemporal[i] != ',' || i == operacionTemporal.Count - 1)
-                    {
-                        //todos los numeros concatenados se guardan en el ultimo numero sin concatenar, antes de una operacion o del cierre del array
-                        if (operacionTemporal[i - 1] is char) operacionTemporal[i] = numeroConcat;
-                        if (operacionTemporal[i] is float && i == operacionTemporal.Count - 1) operacionTemporal[i] = numeroConcat;
-                        else if (operacionTemporal[i - 1] is float) operacionTemporal[i - 1] = numeroConcat;
-                        Eliminar();
-                        numeroConcat = 0;
-                    }
-                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float)
-                    {
-                        numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString() + operacionTemporal[i + 1].ToString());
-                        if (i == operacionTemporal.Count - 2)
-                        {
-                            operacionTemporal[operacionTemporal.Count - 1] = numeroConcat;
-                            i++;
-                            Eliminar();
-                        }
-                        if (i != operacionTemporal.Count - 2 && i != operacionTemporal.Count - 1) i++;
-                    }
-                }
-                else
-                {
-                    operacionTemporal[0] = ans;
-                    if (i == 0 && CantOp > 0) i = CantOp;
-                    else if (i == 0) i = 1;
-                    if (operacionTemporal[i] is float)
-                    {
-                        numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString());
-                    }
-                    if (operacionTemporal[i] is char && (char)operacionTemporal[i] != ',' && i > 1 || i == operacionTemporal.Count - 1)
-                    {
-                        if (operacionTemporal[i - 1] is char && i != 0) operacionTemporal[i] = numeroConcat;
-                        if (operacionTemporal[i] is float && i == operacionTemporal.Count - 1 && i != 0) operacionTemporal[i] = numeroConcat;
-                        else if (operacionTemporal[i - 1] is float && i != 0) operacionTemporal[i - 1] = numeroConcat;
-                        Eliminar();
-                        numeroConcat = 0;
-                    }
-                    else if (operacionTemporal[i] is char && (char)operacionTemporal[i] == ',' && operacionTemporal[i + 1] is float)
-                    {
-                        numeroConcat = float.Parse(numeroConcat.ToString() + operacionTemporal[i].ToString() + operacionTemporal[i + 1].ToString());
-                        if (i == operacionTemporal.Count - 2)
-                        {
-                            operacionTemporal[operacionTemporal.Count - 1] = numeroConcat;
-                            i++;
-                            Eliminar();
-                        }
-                        if (i != operacionTemporal.Count - 2 && i != operacionTemporal.Count - 1) i++;
-                    }
-                }
-                void Eliminar()
-                {
-                    int carac = numeroConcat.ToString().Length;
-                    if (!PrimerCalculo && operacionTemporal[i] is float && (float)operacionTemporal[i] == ans && operacionTemporal[i - 1] is char && (char)operacionTemporal[i - 1] != ',') return; // comprobar que realiza su funcion
-                    if (i >= 2 && numeroConcat.ToString().Length > 1 && numeroConcat != ans)
-                    {
-                        int contador = 0;
-                        do
-                        {
-                            if (i != operacionTemporal.Count && operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != numeroConcat || (operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ','))
-                            {
-                                operacionTemporal.RemoveAt(i - carac);
-                                contador++;
-                            }
-                            else
-                            {
-                                operacionTemporal.RemoveAt(i - (carac - 1));
-                                contador++;
-                            }
-                            if (i == operacionTemporal.Count - 1 && i != carac) i--;
-                        }
-                        while (contador < carac - 1);
-                        i -= contador;
-                    }
-                    else if (i >= 2 && numeroConcat.ToString().Length > 1 && numeroConcat == ans) // eliminar los numeros que el usuario escribio en vez de seleccionar ans
-                    {
-                        int contador = 0;
-                        do
-                        {
-                            if (operacionTemporal[i - carac] is float && (float)operacionTemporal[i - carac] != ans || operacionTemporal[i - carac] is char && (char)operacionTemporal[i - carac] == ',')
-                            {
-                                operacionTemporal.Remove(i - carac);
-                                contador++;
-                            }
-                            else if (operacionTemporal[i - (carac - 1)] is float && (float)operacionTemporal[i - (carac - 1)] != ans)
-                            {
-                                operacionTemporal.RemoveAt(i - (carac - 1));
-                                contador++;
-                            }
-                        }
-                        while (contador < carac - 1);
-                    }
-                }
-            }
-            // multiplicación, división y módulo
-            for (int i = 0; i < operacionTemporal.Count; i++)
-            {
-                if (operacionTemporal[i] is char)
-                {
-                    operacionTemporal = Operaciones.CalculosPrimerOrden(operacionTemporal, i, ans);
-                }
-            }
-
-            //suma y resta
-            for (int i = 0; i < operacionTemporal.Count; i++)
-            {
-                if (operacionTemporal[i] is char)
-                {
-                    operacionTemporal = Operaciones.CalculosSegundoOrden(operacionTemporal, i, ans);
-                }
-            }
-
-            if (operacionTemporal[0] is float)
-            {
-                ans = (float)operacionTemporal[0];
-                Escribir(ans);
-                PrimerCalculo = false;
-                CantOp = operacionTemporal.Count;
-                operaciones = operacionTemporal;
-            }
-        }
+        
         /// <summary>
         /// Permite escribir numeros en el label
         /// </summary>
@@ -322,15 +189,20 @@ namespace Calculadora
 
         private void btnCalcular_Click(object sender, EventArgs e)
         {
-            Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
-            ultimoBotonPresionado = botonActual;
-            if (!Validacion.UnSoloCalculo(operaciones)) 
+            try
             {
-                Escribir();
-                return;
+                string input = Resultados.Text; 
+
+                float resultado = _calculator.Evaluate(input).Result;
+
+                ans = resultado;
+
+                Resultados.Text = resultado.ToString();
             }
-            ResolverOperaciones();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error en la expresión: " + ex.Message);
+            }
         }
 
         private void Menu_Opciones_Click(object sender, EventArgs e)
