@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Calculadora.Domain.Parser
 {
+    /// <summary>
+    /// Lista de valores válidos que puede contener una operación
+    /// </summary>
     public enum TokenType
     {
         Number,

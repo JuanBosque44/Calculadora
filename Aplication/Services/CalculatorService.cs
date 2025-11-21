@@ -25,6 +25,12 @@ namespace Calculadora.Aplication.Services
             return new OperationResultDto { Result = result };
         }
 
+        /// <summary>
+        /// Calcula el resultado de la operación recibida 
+        /// </summary>
+        /// <param name="input">Recibe una operación como parámetro</param>
+        /// <returns>El resultado final de la operación</returns>
+        /// <exception cref="ArgumentException"></exception>
         public OperationResultDto Evaluate(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

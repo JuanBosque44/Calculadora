@@ -17,7 +17,6 @@ namespace Calculadora.Domain.Engine
 
             list = Process(list, TokenType.Star, TokenType.Slash, TokenType.Percent);
 
-            // 2. Luego suma/resta
             list = Process(list, TokenType.Plus, TokenType.Minus);
 
             return float.Parse(list[0].Value);
@@ -36,7 +35,6 @@ namespace Calculadora.Domain.Engine
                     var strategy = OperationFactory.Get(op);
                     var result = strategy.Execute(left, right);
 
-                    // reemplazar tokens
                     tokens.RemoveAt(i + 1);
                     tokens.RemoveAt(i);
                     tokens[i - 1] = new Token(TokenType.Number, result.ToString());

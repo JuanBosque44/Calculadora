@@ -94,7 +94,7 @@ namespace Calculadora.Domain.Parser
                 var exp = ParseExpression(tokens, ref position);
 
                 if (tokens[position].Type != TokenType.RightParen)
-                    throw new Exception("Missing closing parenthesis");
+                    throw new Exception("No hay paréntesis de cierre");
 
                 position++;
                 return exp;

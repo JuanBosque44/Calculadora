@@ -1,12 +1,10 @@
 ﻿using Calculadora.Domain.Parser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Calculadora.Domain.Entities
 {
+    /// <summary>
+    /// Objeto que guarda cada parte de la operación por separado
+    /// </summary>
     public class Token
     {
         public TokenType Type { get; }

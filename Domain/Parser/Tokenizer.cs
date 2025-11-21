@@ -7,6 +7,12 @@ namespace Calculadora.Domain.Parser
 {
     public class Tokenizer
     {
+        /// <summary>
+        /// Transforma el input recibido en una lista de tokens
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public List<Token> Tokenize(string input)
         {
             var tokens = new List<Token>();
@@ -37,7 +43,7 @@ namespace Calculadora.Domain.Parser
                     continue;
                 }
 
-                if ("+-*/%".Contains(c))
+                if ("+-X/%".Contains(c))
                 {
                     switch (c)
                     {
@@ -47,7 +53,7 @@ namespace Calculadora.Domain.Parser
                         case '-':
                             tokens.Add(new Token(TokenType.Minus, "-"));
                             break;
-                        case '*':
+                        case 'X':
                             tokens.Add(new Token(TokenType.Star, "*"));
                             break;
                         case '/':

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Collections;
 using System.IO;
 using Calculadora.Aplication.Services;
 using Calculadora.Domain.Engine;
@@ -10,180 +9,136 @@ namespace Calculadora
     public partial class Calculadora : Form
     {
         private readonly CalculatorService _calculator;
-        ArrayList operaciones = new ArrayList();
         float ans;
-        int CantOp = 0;
-        bool PrimerCalculo = true;
         public Calculadora()
         {
             InitializeComponent();
             _calculator = new CalculatorService(new CalculatorEngine());
             if (File.Exists("Tema.txt")) Tema.CambiarColor(this);
             this.KeyPreview = true;
+            this.AcceptButton = btnCalcular;
         }
         private Button ultimoBotonPresionado = null;
         
         /// <summary>
         /// Permite escribir numeros en el label
         /// </summary>
-        void Escribir()
+        void Agregar(string txt)
         {
-            Resultados.Text = string.Empty;
-            if (PrimerCalculo)
+            if(Resultados.Text == "0")
             {
-                foreach (var variable in operaciones)
-                {
-                    Resultados.Text += variable.ToString();
-                }
+                Resultados.Text = string.Empty;
             }
-            else
-            {
-                if (ultimoBotonPresionado != btnBorrar && CantOp != 0) Resultados.Text += ans;
-                for (int i = 0; i < operaciones.Count; i++)
-                {
-                    if (i == 0) i = CantOp;
-                    Resultados.Text += operaciones[i].ToString();
-                }
-            }
-        }
-        void Escribir(float resultado)
-        {
-            Resultados.Text = string.Empty;
-            Resultados.Text = resultado.ToString();
+            Resultados.Text += txt;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn1(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button1.Text));
-            Escribir();
+            Agregar(button1.Text);
         }
 
-        private void button10_Click(object sender, EventArgs e)
+        private void btn2(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button10.Text));
-            Escribir();
+            Agregar(button10.Text);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btn3(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button2.Text));
-            Escribir();
+            Agregar(button2.Text);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void btn4(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button3.Text));
-            Escribir();
+            Agregar(button3.Text);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void btn5(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button4.Text));
-            Escribir();
+            Agregar(button4.Text);
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void btn6(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button5.Text));
-            Escribir();
+            Agregar(button5.Text);
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void btn7(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button6.Text));
-            Escribir();
+            Agregar(button6.Text);
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void btn8(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button7.Text));
-            Escribir();
+            Agregar(button7.Text);
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void btn9(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button8.Text));
-            Escribir();
+            Agregar(button8.Text);
         }
 
-        private void button11_Click(object sender, EventArgs e)
+        private void btnSuma(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
-            operaciones.Add(char.Parse(button11.Text));
-            Escribir();
+            Agregar(button11.Text);
         }
 
-        private void button13_Click(object sender, EventArgs e)
+        private void btnDivision(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
-            operaciones.Add(char.Parse(button13.Text));
-            Escribir();
+            Agregar(button13.Text);
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        private void btnResta(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
-            operaciones.Add(char.Parse(button9.Text));
-            Escribir();
+            Agregar(button9.Text);
         }
 
-        private void button14_Click(object sender, EventArgs e)
+        private void btnModulo(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
-            operaciones.Add(char.Parse(button14.Text));
-            Escribir();
+            Agregar(button14.Text);
         }
 
-        private void button12_Click(object sender, EventArgs e)
+        private void btnMultiplicacion(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
-            operaciones.Add(char.Parse(button12.Text));
-            Escribir();
+            Agregar(button12.Text);
         }
 
         private void btnBorrarTodo_Click(object sender, EventArgs e)
         {
-            //ultimoBotonPresionado = (Button)sender;
             ultimoBotonPresionado = null;
-            operaciones.Clear();
+            Resultados.Text = string.Empty;
             ans = 0;
-            CantOp = 0;
-            PrimerCalculo = true;
-            Escribir();
         }
 
         private void btnBorrar_Click(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            if (operaciones.Count > 0)
+            if (Resultados.Text.Length > 0)
             {
-                if (!PrimerCalculo && CantOp != 0) CantOp--;
-                if (operaciones[operaciones.Count - 1] is float && (float)operaciones[operaciones.Count - 1] == ans)
-                {
-                    PrimerCalculo = true;
-                    operaciones.RemoveAt(operaciones.Count - 1);
-                }
-                else operaciones.RemoveAt(operaciones.Count - 1);
-                Escribir();
+                Resultados.Text = Resultados.Text.Substring(0, Resultados.Text.Length - 1);
             }
         }
 
@@ -201,7 +156,7 @@ namespace Calculadora
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error en la expresión: " + ex.Message);
+                MessageBox.Show("Error en la sintaxis: " + ex.Message);
             }
         }
 
@@ -213,29 +168,26 @@ namespace Calculadora
             Tema.CambiarColor(this);
         }
 
-        private void button15_Click(object sender, EventArgs e)
+        private void btn0(object sender, EventArgs e)
         {
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(float.Parse(button15.Text));
-            Escribir();
+            Agregar(button15.Text);
         }
 
-        private void button16_Click(object sender, EventArgs e) //coma
+        private void btnDecimal(object sender, EventArgs e) 
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
-            operaciones.Add(char.Parse(button16.Text));
-            Escribir();
+            Agregar(button16.Text);
         }
 
-        private void button17_Click(object sender, EventArgs e) //answer
+        private void btnRespuesta(object sender, EventArgs e) 
         {
             Button botonActual = (Button)sender;
             if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = (Button)sender;
-            operaciones.Add(ans);
-            Escribir();
+            Agregar(ans.ToString());
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
