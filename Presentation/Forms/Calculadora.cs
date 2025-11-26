@@ -1,22 +1,63 @@
-﻿using System;
-using System.Windows.Forms;
-using System.IO;
-using Calculadora.Aplication.Services;
+﻿using Calculadora.Aplication.Services;
 using Calculadora.Domain.Engine;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Calculadora
 {
     public partial class Calculadora : Form
     {
         private readonly CalculatorService _calculator;
+        private readonly Dictionary<Keys, Button> _keyMap;
         float ans;
         public Calculadora()
         {
             InitializeComponent();
             _calculator = new CalculatorService(new CalculatorEngine());
             if (File.Exists("Tema.txt")) Tema.CambiarColor(this);
+            if (btnBorrar.BackColor == Color.Black) btnBorrar.Image = Properties.Resources.borrar_blanco;
             this.KeyPreview = true;
             this.AcceptButton = btnCalcular;
+
+            _keyMap = new Dictionary<Keys, Button>
+            {
+                { Keys.D1, button1 },
+                { Keys.D2, button10 },
+                { Keys.D3, button2 },
+                { Keys.D4, button3 },
+                { Keys.D5, button4 },
+                { Keys.D6, button5 },
+                { Keys.D7, button6 },
+                { Keys.D8, button7 },
+                { Keys.D9, button8 },
+                { Keys.D0, button15 },
+
+                { Keys.NumPad1, button1 },
+                { Keys.NumPad2, button10 },
+                { Keys.NumPad3, button2 },
+                { Keys.NumPad4, button3 },
+                { Keys.NumPad5, button4 },
+                { Keys.NumPad6, button5 },
+                { Keys.NumPad7, button6 },
+                { Keys.NumPad8, button7 },
+                { Keys.NumPad9, button8 },
+                { Keys.NumPad0, button15 },
+
+                { Keys.Oemcomma, button16 },
+                { Keys.Oemplus, button11 },
+                { Keys.OemMinus, button9 },
+                { Keys.Divide, button13 },
+                { Keys.Multiply, button12 },
+
+                { Keys.Back, btnBorrar },
+                { Keys.Add, button11 },
+                { Keys.Subtract, button9 },
+                { Keys.Enter, btnCalcular },
+                { Keys.Escape, btnBorrarTodo },
+            };
         }
         private Button ultimoBotonPresionado = null;
         
@@ -166,6 +207,8 @@ namespace Calculadora
             if (File.Exists("Tema.txt")) Tema.CambiarColor(opciones);
             opciones.ShowDialog();
             Tema.CambiarColor(this);
+            if (btnBorrar.BackColor == Color.Black) btnBorrar.Image = Properties.Resources.borrar_blanco;
+            else btnBorrar.Image = Properties.Resources.borrar_negro;
         }
 
         private void btn0(object sender, EventArgs e)
@@ -192,113 +235,10 @@ namespace Calculadora
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            if (_keyMap.TryGetValue(e.KeyCode, out Button btn))
             {
-                case Keys.D1:
-                    button1.PerformClick();
-                    break;
-
-                case Keys.D2:
-                    button10.PerformClick();
-                    break;
-
-                case Keys.D3:
-                    button2.PerformClick();
-                    break;
-
-                case Keys.D4:
-                    button3.PerformClick();
-                    break;
-
-                case Keys.D5:
-                    button4.PerformClick();
-                    break;
-
-                case Keys.D6:
-                    button5.PerformClick();
-                    break;
-
-                case Keys.D7:
-                    button6.PerformClick();
-                    break;
-
-                case Keys.D8:
-                    button7.PerformClick();
-                    break;
-
-                case Keys.D9:
-                    button8.PerformClick();
-                    break;
-
-                case Keys.D0:
-                    button15.PerformClick();
-                    break;
-
-                case Keys.Oemcomma:
-                    button16.PerformClick();
-                    break;
-
-                case Keys.Oemplus:
-                    button11.PerformClick();
-                    break;
-
-                case Keys.OemMinus:
-                    button9.PerformClick();
-                    break;
-
-                case Keys.Back:
-                    btnBorrar.PerformClick();
-                    break;
-
-                case Keys.Divide:
-                    button13.PerformClick();
-                    break;
-
-                case Keys.Multiply:
-                    button12.PerformClick();
-                    break;
-
-                case Keys.Enter:
-                    btnCalcular.PerformClick();
-                    break;
-                case Keys.Add:
-                    button11.PerformClick();
-                    break;
-                case Keys.Subtract:
-                    button9.PerformClick();
-                    break;
-                case Keys.NumPad1:
-                    button1.PerformClick();
-                    break;
-                case Keys.NumPad2:
-                    button10.PerformClick();
-                    break;
-                case Keys.NumPad3:
-                    button2.PerformClick();
-                    break;
-                case Keys.NumPad4:
-                    button3.PerformClick();
-                    break;
-                case Keys.NumPad5:
-                    button4.PerformClick();
-                    break;
-                case Keys.NumPad6:
-                    button5.PerformClick();
-                    break;
-                case Keys.NumPad7:
-                    button6.PerformClick();
-                    break;
-                case Keys.NumPad8:
-                    button7.PerformClick();
-                    break;
-                case Keys.NumPad9:
-                    button8.PerformClick();
-                    break;
-                case Keys.NumPad0:
-                    button15.PerformClick();
-                    break;
-                default:
-                    break;
+                btn.PerformClick();
+                e.Handled = true;
             }
         }
     }
@@ -307,7 +247,6 @@ namespace Calculadora
 /* falta terminar opciones 
  * --> agregar opcion cambiar tipo de calculadora (conversor de numeros, temperaturas, romanos, etc)
  * historial de calculos
- * ver una forma mas optima de cambiar la funcion de cada boton
  * agregar numeros negativos
  * agregar otros tipos de calculo
  */
