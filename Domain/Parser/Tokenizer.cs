@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Calculadora.Domain.Parser
 {
@@ -28,18 +29,10 @@ namespace Calculadora.Domain.Parser
                     continue;
                 }
 
-                if (char.IsDigit(c) || c == ',')
+                if (char.IsDigit(c) || c == ',' || ValidarValor(input, i, tokens))
                 {
-                    string number = "";
-
-                    while (i < input.Length &&
-                          (char.IsDigit(input[i]) || input[i] == ','))
-                    {
-                        number += input[i];
-                        i++;
-                    }
-
-                    tokens.Add(new Token(TokenType.Number, number));
+                    var tokenNumero = LeerNumero(input, ref i);
+                    tokens.Add(tokenNumero);
                     continue;
                 }
 
@@ -87,6 +80,49 @@ namespace Calculadora.Domain.Parser
             }
 
             return tokens;
+        }
+
+        private bool ValidarValor(string input, int index, List<Token> tokens)
+        {
+            if (input[index] != '-' && input[index] != '+') return false;
+
+            bool esPrimerCaracter = tokens.Count == 0;
+
+            bool tokenAnteriorEsOperador =
+                tokens.Count > 0 &&
+                (
+                    tokens[tokens.Count - 1].Type == TokenType.Plus ||
+                    tokens[tokens.Count - 1].Type == TokenType.Minus ||
+                    tokens[tokens.Count - 1].Type == TokenType.Star ||
+                    tokens[tokens.Count - 1].Type == TokenType.Slash ||
+                    tokens[tokens.Count - 1].Type == TokenType.Percent
+                );
+
+            bool tokenAnteriorEsParentesisAbierto =
+                tokens.Count > 0 &&
+                tokens[tokens.Count - 1].Type == TokenType.LeftParen;
+
+            return esPrimerCaracter || tokenAnteriorEsOperador || tokenAnteriorEsParentesisAbierto;
+        }
+
+        private Token LeerNumero(string input, ref int i)
+        {
+            var sb = new StringBuilder();
+
+            if (input[i] == '-' || input[i] == '+')
+            {
+                if (input[i] == '-') sb.Append('-');
+                else sb.Append('+');
+                i++;
+            }
+
+            while (i < input.Length && (char.IsDigit(input[i]) || input[i] == ','))
+            {
+                sb.Append(input[i]);
+                i++;
+            }
+
+            return new Token(TokenType.Number, sb.ToString());
         }
     }
 }

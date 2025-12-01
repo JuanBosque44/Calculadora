@@ -12,6 +12,9 @@ namespace Calculadora
     {
         private readonly CalculatorService _calculator;
         private readonly Dictionary<Keys, Button> _keyMap;
+        /// <summary>
+        /// Resultado de cada operación
+        /// </summary>
         float ans;
         public Calculadora()
         {
@@ -130,7 +133,6 @@ namespace Calculadora
         private void btnSuma(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual || ultimoBotonPresionado == null) return;
             ultimoBotonPresionado = botonActual;
             Agregar(button11.Text);
         }
@@ -146,7 +148,6 @@ namespace Calculadora
         private void btnResta(object sender, EventArgs e)
         {
             Button botonActual = (Button)sender;
-            if (ultimoBotonPresionado == botonActual) return;
             ultimoBotonPresionado = botonActual;
             Agregar(button9.Text);
         }
@@ -197,7 +198,8 @@ namespace Calculadora
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error en la sintaxis: " + ex.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Resultados.Text = string.Empty;
             }
         }
 
@@ -244,10 +246,9 @@ namespace Calculadora
     }
 }
 
-/* falta terminar opciones 
+/*  
  * --> agregar opcion cambiar tipo de calculadora (conversor de numeros, temperaturas, romanos, etc)
  * historial de calculos
- * agregar numeros negativos
  * agregar otros tipos de calculo
  */
 

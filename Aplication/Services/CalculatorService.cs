@@ -12,11 +12,13 @@ namespace Calculadora.Aplication.Services
     {
         private readonly ICalculatorEngine _engine;
         private readonly Parser _parser;
+        private readonly Tokenizer _tokenizer = new Tokenizer();
 
         public CalculatorService(ICalculatorEngine engine)
         {
             _engine = engine;
             _parser = new Parser();
+            _tokenizer = new Tokenizer();
         }
 
         public OperationResultDto Evaluate(List<Token> tokens)
@@ -33,19 +35,25 @@ namespace Calculadora.Aplication.Services
         /// <exception cref="ArgumentException"></exception>
         public OperationResultDto Evaluate(string input)
         {
-            if (string.IsNullOrWhiteSpace(input))
-                throw new ArgumentException("La expresión está vacía.");
-
-            var tokenizer = new Tokenizer();
-            var tokens = tokenizer.Tokenize(input);
-
-            var parser = new Parser();
-            IExpression expression = parser.Parse(tokens);
-
-            return new OperationResultDto
+            try
             {
-                Result = expression.Evaluate()
-            };
+
+                if (string.IsNullOrWhiteSpace(input))
+                    throw new ArgumentException("La expresión está vacía.");
+
+                var tokens = _tokenizer.Tokenize(input);
+
+                IExpression expression = _parser.Parse(tokens);
+
+                return new OperationResultDto
+                {
+                    Result = expression.Evaluate()
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error al evaluar la expresión: " + ex.Message, ex);
+            }
         }
     }
 }
